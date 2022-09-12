@@ -288,7 +288,7 @@ async def main():
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        if keys[pygame.K_z]: save('references/orGate.txt', TILES)
+        if keys[pygame.K_z]: save('references/frequencyDoubleHalvers.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
