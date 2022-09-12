@@ -19,6 +19,7 @@ targetState = 0
 TILES = []
 
 def generate(width, height, surf, tileSize):
+    global TILES
     for y in range(width):
         row = []
         for x in range(height):
@@ -61,7 +62,8 @@ def processState():
     sleep(0.1)
 
 def createTile(tile, state):
-    newTile = Tile(tile.x, tile.y, tile.displaySurf, TILE_SIZE)
+    newTile = Tile(tile.x, tile.y, tile.displaySurf, tile.size)
+    newTile.moveX, newTile.moveY = tile.moveX, tile.moveY
     newTile.state = state
     return newTile
 
@@ -286,7 +288,7 @@ async def main():
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        if keys[pygame.K_z]: save('saves/' + saveText + '.txt', TILES)
+        if keys[pygame.K_z]: save('references/orGate.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
