@@ -15,6 +15,7 @@ saveText = ''
 moveX = 0
 moveY = 0
 speed = 20
+inc = 0
 targetState = 0
 TILE_GRID_SIZE = 60
 TILES = []
@@ -158,7 +159,7 @@ async def loadMenu():
                         sleep(0.1)
                     button.draw(screen, 'white', 5, 5, small=True)
 
-                elif fileIndex > 10:
+                elif fileIndex >= 10:
                     incrementX = 125
                     text = str(file)
                     newText = text.split('.txt')
@@ -239,19 +240,18 @@ async def Options():
         pygame.draw.rect(screen, 'cyan', box)
         button0.draw(screen, 'white', 15, 15)
         button1.draw(screen, 'white', 15, 15)
-        button2.draw(screen, 'white', 23, 15)
+        button2.draw(screen, 'white', 15, 15)
 
         pygame.display.flip()
         clock.tick(FPS)
         await asyncio.sleep(0)
 
 async def main():
-    global targetState, moveX, moveY, speed, screen, clock, TILE_GRID_SIZE
+    global targetState, moveX, moveY, speed, screen, clock, TILE_GRID_SIZE, inc
 
     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
 
     while True:
-        screen.fill('black')
 
         mouseX, mouseY = pygame.mouse.get_pos()
 
@@ -307,11 +307,16 @@ async def main():
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE]: processState()
+        if keys[pygame.K_SPACE]:
+            processState()
+            pygame.image.save(screen, 'animations/xorGate/' + str(inc) + '.png')
+            inc += 1
+
+        screen.fill('black')
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        # if keys[pygame.K_z]: save('references/binary adder.txt', TILES)
+        # if keys[pygame.K_z]: save('references/basic elements.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
