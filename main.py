@@ -137,21 +137,38 @@ async def loadMenu():
         mousePos = pygame.mouse.get_pos()
 
         saveBox = pygame.Rect(int(WIDTH / 2), int(HEIGHT / 2) - 115, 200, 200)
-        templateBox = pygame.Rect(int(WIDTH / 2) - 300, int(HEIGHT / 2) - 115, 200, 240)
+        templateBox = pygame.Rect(int(WIDTH / 2) - 400, int(HEIGHT / 2) - 115, 250, 330)
 
         pygame.draw.rect(screen, 'cyan', saveBox)
         pygame.draw.rect(screen, 'cyan', templateBox)
 
         for _, __, files in walk('references'):
-            increment = 20
-            for file in files:
-                button = Button('red', templateBox.x + 50, templateBox.y + increment, 100, 20, file)
-                increment += 30
-                if button.isOver(mousePos) and clicking:
-                    load('references/' + file, TILES)
-                    running = False
-                    sleep(0.1)
-                button.draw(screen, 'white', 5, 5, small=True)
+            incrementY = 20
+            incrementYW = incrementY
+            incrementX = 0
+            for fileIndex, file in enumerate(files):
+                if fileIndex < 10:
+                    text = str(file)
+                    newText = text.split('.txt')
+                    button = Button('red', ((templateBox.x + 20) + incrementX), templateBox.y + incrementY, 100, 20, newText[0].title())
+                    incrementY += 30
+                    if button.isOver(mousePos) and clicking:
+                        load('references/' + file, TILES)
+                        running = False
+                        sleep(0.1)
+                    button.draw(screen, 'white', 5, 5, small=True)
+
+                elif fileIndex > 10:
+                    incrementX = 125
+                    text = str(file)
+                    newText = text.split('.txt')
+                    button = Button('red', templateBox.x + incrementX, templateBox.y + incrementYW, 100, 20, newText[0].title())
+                    incrementYW += 30
+                    if button.isOver(mousePos) and clicking:
+                        load('references/' + file, TILES)
+                        running = False
+                        sleep(0.1)
+                    button.draw(screen, 'white', 5, 5, small=True)
 
         for _, __, files in walk('saves'):
             increment = 20
@@ -164,6 +181,7 @@ async def loadMenu():
                     sleep(0.1)
                 button.draw(screen, 'white', 5, 5, small=True)
 
+        clicking = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
@@ -291,9 +309,8 @@ async def main():
                             if tile.size < 100:
                                 tile.size += speed / 10
 
-        #         if event.type == pygame.MOUSEBUTTONDOWN:
-        #             if event.button == 1:
-        #                 clicking = True
+                # if event.button == 1:
+                #     clicking = True
         #
         # if button0.isOver(mousePos) and clicking and button0.isActive():
         #     if TILE_GRID_SIZE <= 10:
@@ -314,7 +331,7 @@ async def main():
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        if keys[pygame.K_z]: save('references/rom.txt', TILES)
+        if keys[pygame.K_z]: save('references/binary adder.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
@@ -337,7 +354,7 @@ async def main():
         # button0.draw(screen, 'white', 16, 15)
         # button1.draw(screen, 'white', 16, 12)
 
-        debug(clock)
+        debug(f'{clock}')
         pygame.display.flip()
         clock.tick(FPS)
         await asyncio.sleep(0)

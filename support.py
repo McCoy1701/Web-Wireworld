@@ -54,9 +54,9 @@ class Button:
 
         if self.text != '':
             if not small:
-                drawText(self.text.capitalize(), color, surf, self.x + ofsX, self.y + ofsY, FONT)
+                drawText(self.text, color, surf, self.x + ofsX, self.y + ofsY, FONT)
             else:
-                drawText(self.text.capitalize(), color, surf, self.x + ofsX, self.y + ofsY, SMALL_FONT)
+                drawText(self.text, color, surf, self.x + ofsX, self.y + ofsY, SMALL_FONT)
 
     def toggleActive(self):
         if self.active:
