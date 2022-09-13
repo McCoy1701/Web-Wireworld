@@ -41,18 +41,34 @@ class Button:
         self.width = width
         self.height = height
         self.text = text
+        self.active = True
 
     def draw(self, surf, color: str, ofsX: int = 0, ofsY: int = 0, small: bool = False, outline = None,):
-        if outline:
-            pygame.draw.rect(surf, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
+        if not self.active:
+            if outline:
+                pygame.draw.rect(surf, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
 
-        pygame.draw.rect(surf, self.color, (self.x, self.y, self.width, self.height), 0)
+            pygame.draw.rect(surf, COLORS[0], (self.x, self.y, self.width, self.height), 0)
+        else:
+            pygame.draw.rect(surf, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
             if not small:
                 drawText(self.text.capitalize(), color, surf, self.x + ofsX, self.y + ofsY, FONT)
             else:
                 drawText(self.text.capitalize(), color, surf, self.x + ofsX, self.y + ofsY, SMALL_FONT)
+
+    def toggleActive(self):
+        if self.active:
+            self.active = False
+        else:
+            self.active = True
+
+    def isActive(self):
+        if self.active:
+            return True
+        else:
+            return False
 
     def isOver(self, pos):
         if self.x < pos[0] < self.x + self.width:

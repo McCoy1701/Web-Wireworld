@@ -14,8 +14,9 @@ pygame.display.set_caption(TITLE)
 saveText = ''
 moveX = 0
 moveY = 0
-speed = 10
+speed = 20
 targetState = 0
+TILE_GRID_SIZE = 60
 TILES = []
 
 def generate(width, height, surf, tileSize):
@@ -122,7 +123,6 @@ async def saveMenu():
         screen.blit(textRender, (inputBox.x + 5, inputBox.y + 5))
         button0.draw(screen, 'white', 5, 5)
 
-
         pygame.display.flip()
         clock.tick(FPS)
         await asyncio.sleep(0)
@@ -180,6 +180,7 @@ async def loadMenu():
         await asyncio.sleep(0)
 
 async def Options():
+    global TILE_GRID_SIZE
     running = True
     clicking = False
 
@@ -205,6 +206,7 @@ async def Options():
         if button2.isOver(mousePos) and clicking:
             exit()
 
+        clicking = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
@@ -226,12 +228,19 @@ async def Options():
         await asyncio.sleep(0)
 
 async def main():
-    global targetState, moveX, moveY, speed, screen, clock
+    global targetState, moveX, moveY, speed, screen, clock, TILE_GRID_SIZE
 
     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
 
     while True:
         screen.fill('gray')
+
+        # mousePos = pygame.mouse.get_pos()
+        #
+        # button0 = Button('red', int(WIDTH)- 60, int(HEIGHT)-60, 48, 48, '-')
+        # button1 = Button('red', int(WIDTH) - 120, int(HEIGHT)-60, 48, 48, '+')
+
+        # clicking = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
@@ -282,13 +291,30 @@ async def main():
                             if tile.size < 100:
                                 tile.size += speed / 10
 
+        #         if event.type == pygame.MOUSEBUTTONDOWN:
+        #             if event.button == 1:
+        #                 clicking = True
+        #
+        # if button0.isOver(mousePos) and clicking and button0.isActive():
+        #     if TILE_GRID_SIZE <= 10:
+        #         pass
+        #     else:
+        #         TILE_GRID_SIZE -= 10
+        #     TILES.clear()
+        #     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
+        #
+        # if button1.isOver(mousePos) and clicking and button1.isActive():
+        #     TILE_GRID_SIZE += 10
+        #     TILES.clear()
+        #     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
+
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_SPACE]: processState()
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        if keys[pygame.K_z]: save('references/frequencyDoubleHalvers.txt', TILES)
+        if keys[pygame.K_z]: save('references/rom.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
@@ -308,6 +334,10 @@ async def main():
         else:
             pygame.draw.circle(screen, COLORS[targetState], (40, HEIGHT - 40), 30)
 
+        # button0.draw(screen, 'white', 16, 15)
+        # button1.draw(screen, 'white', 16, 12)
+
+        debug(clock)
         pygame.display.flip()
         clock.tick(FPS)
         await asyncio.sleep(0)
