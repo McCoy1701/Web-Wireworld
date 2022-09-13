@@ -251,14 +251,10 @@ async def main():
     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
 
     while True:
-        screen.fill('gray')
+        screen.fill('black')
 
-        # mousePos = pygame.mouse.get_pos()
-        #
-        # button0 = Button('red', int(WIDTH)- 60, int(HEIGHT)-60, 48, 48, '-')
-        # button1 = Button('red', int(WIDTH) - 120, int(HEIGHT)-60, 48, 48, '+')
+        mouseX, mouseY = pygame.mouse.get_pos()
 
-        # clicking = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
@@ -309,29 +305,13 @@ async def main():
                             if tile.size < 100:
                                 tile.size += speed / 10
 
-                # if event.button == 1:
-                #     clicking = True
-        #
-        # if button0.isOver(mousePos) and clicking and button0.isActive():
-        #     if TILE_GRID_SIZE <= 10:
-        #         pass
-        #     else:
-        #         TILE_GRID_SIZE -= 10
-        #     TILES.clear()
-        #     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
-        #
-        # if button1.isOver(mousePos) and clicking and button1.isActive():
-        #     TILE_GRID_SIZE += 10
-        #     TILES.clear()
-        #     generate(TILE_GRID_SIZE, TILE_GRID_SIZE, screen, TILE_SIZE)
-
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_SPACE]: processState()
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        if keys[pygame.K_z]: save('references/binary adder.txt', TILES)
+        # if keys[pygame.K_z]: save('references/binary adder.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
@@ -346,15 +326,19 @@ async def main():
             for tile in row:
                 tile.draw(moveX, moveY)
 
+        for rowIndex, row in enumerate(TILES):
+            for colIndex, tile in enumerate(row):
+                if pygame.Rect((tile.x * tile.size + moveX,
+                                tile.y * tile.size + tile.moveY),
+                               (tile.size, tile.size)).collidepoint(pygame.mouse.get_pos()):
+                    drawText(f'{tile.x, tile.y}', 'green', screen, 1165, 690, FONT)
+
         if targetState == 0:
             pygame.draw.circle(screen, 'white', (40, HEIGHT - 40), 30)
         else:
             pygame.draw.circle(screen, COLORS[targetState], (40, HEIGHT - 40), 30)
 
-        # button0.draw(screen, 'white', 16, 15)
-        # button1.draw(screen, 'white', 16, 12)
-
-        debug(f'{clock}')
+        # debug(f'{clock}')
         pygame.display.flip()
         clock.tick(FPS)
         await asyncio.sleep(0)
