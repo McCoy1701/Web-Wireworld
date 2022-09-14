@@ -1,10 +1,10 @@
 import pygame, sys, asyncio
 from time import sleep
-from settings import *
-from support import exit, save, load, drawText, Button
-from debug import debug
 from os import walk
-from tile import Tile
+from src.settings import *
+from src.support import exit, save, load, drawText, Button
+from src.debug import debug
+from src.tile import Tile
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -87,7 +87,7 @@ async def saveMenu():
         textRender = FONT.render(saveText, 1, 'white')
 
         if button0.isOver(mousePos) and clicking and len(saveText) != 0:
-            save('saves/' + saveText + '.txt', TILES)
+            save('src/saves/' + saveText + '.txt', TILES)
             saveText = ''
             running = False
             sleep(0.1)
@@ -143,7 +143,7 @@ async def loadMenu():
         pygame.draw.rect(screen, 'cyan', saveBox)
         pygame.draw.rect(screen, 'cyan', templateBox)
 
-        for _, __, files in walk('references'):
+        for _, __, files in walk('src/references'):
             incrementY = 20
             incrementYW = incrementY
             incrementX = 0
@@ -154,7 +154,7 @@ async def loadMenu():
                     button = Button('red', ((templateBox.x + 20) + incrementX), templateBox.y + incrementY, 100, 20, newText[0].title())
                     incrementY += 30
                     if button.isOver(mousePos) and clicking:
-                        load('references/' + file, TILES)
+                        load('src/references/' + file, TILES)
                         running = False
                         sleep(0.1)
                     button.draw(screen, 'white', 5, 5, small=True)
@@ -166,18 +166,18 @@ async def loadMenu():
                     button = Button('red', templateBox.x + incrementX, templateBox.y + incrementYW, 100, 20, newText[0].title())
                     incrementYW += 30
                     if button.isOver(mousePos) and clicking:
-                        load('references/' + file, TILES)
+                        load('src/references/' + file, TILES)
                         running = False
                         sleep(0.1)
                     button.draw(screen, 'white', 5, 5, small=True)
 
-        for _, __, files in walk('saves'):
+        for _, __, files in walk('src/saves'):
             increment = 20
             for file in files:
                 button = Button('red', saveBox.x + 50, saveBox.y + increment, 100, 20, file)
                 increment += 30
                 if button.isOver(mousePos) and clicking:
-                    load('saves/' + file, TILES)
+                    load('src/saves/' + file, TILES)
                     running = False
                     sleep(0.1)
                 button.draw(screen, 'white', 5, 5, small=True)
@@ -316,7 +316,7 @@ async def main():
         if keys[pygame.K_1]: targetState = 1
         if keys[pygame.K_2]: targetState = 2
         if keys[pygame.K_3]: targetState = 3
-        # if keys[pygame.K_z]: save('references/basic elements.txt', TILES)
+        # if keys[pygame.K_z]: save('src/references/basic elements.txt', TILES)
         if keys[pygame.K_ESCAPE]: await Options()
         if keys[pygame.K_w]: moveY += speed
         if keys[pygame.K_a]: moveX += speed
